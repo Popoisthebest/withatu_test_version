@@ -1,12 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:withatu_test_version/screens/seat_screen.dart';
 
 class ToolCard extends StatefulWidget {
-  // 필드 선언
   final String img;
   final String toolName;
 
-  // 생성자에서 매개변수를 받아 필드에 할당
   const ToolCard({
     super.key,
     required this.img,
@@ -20,14 +19,14 @@ class ToolCard extends StatefulWidget {
 class _ToolCardState extends State<ToolCard> {
   FirebaseFirestore db = FirebaseFirestore.instance;
 
-  // 상태를 데이터베이스에 저장
-  void sendData(String toolName, bool isUsing) {
-    final toolList = <String, dynamic>{
+  void sendTool(String toolName, int stock) {
+    final toolData = <String, dynamic>{
       "tool_name": toolName,
-      "isUsing": isUsing,
+      "stock": stock,
+      "timestamp": FieldValue.serverTimestamp(), // 서버 시간을 timestamp로 추가
     };
 
-    db.collection("current states").doc(toolName).set(toolList).onError(
+    db.collection("current states").doc(toolName).set(toolData).onError(
           (e, _) => print("Error writing document: $e"),
         );
   }
@@ -44,16 +43,21 @@ class _ToolCardState extends State<ToolCard> {
           return Text("데이터가 없습니다.");
         }
 
-        // Firestore의 현재 상태를 가져와 isUsing 변수를 설정
-        bool isUsing = snapshot.data!['isUsing'] ?? false;
+        int stock = snapshot.data!['stock'] ?? 0;
 
         return GestureDetector(
-          onTap: () {
-            setState(() {
-              isUsing = !isUsing;
-            });
-            sendData(widget.toolName, isUsing);
-          },
+          onTap: stock == 0
+              ? null
+              : () {
+                  setState(() {
+                    stock = stock > 0 ? stock - 1 : 0;
+                  });
+                  sendTool(widget.toolName, stock);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (builder) => SeatScreen()),
+                  );
+                },
           child: SizedBox(
             height: 120,
             child: ClipRRect(
@@ -62,26 +66,54 @@ class _ToolCardState extends State<ToolCard> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Image.asset(widget.img),
-                  SizedBox(width: 8),
-                  Flexible(
-                    child: Text(
-                      widget.toolName,
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.w600,
+                  Expanded(
+                    child: Container(
+                      height: 120,
+                      decoration: BoxDecoration(
+                        border: Border.symmetric(
+                          horizontal: BorderSide(
+                            width: 1,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.only(left: 8),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              widget.toolName,
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            SizedBox(height: 4),
+                            Text(
+                              stock > 0 ? '재고: $stock' : '품절',
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: stock > 0 ? Colors.black : Colors.red,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
                   Container(
                     width: 50,
                     height: 120,
-                    color: isUsing ? Colors.red : Colors.green,
+                    color: stock > 0 ? Colors.green : Colors.red,
                     child: Center(
                       child: Text(
-                        isUsing ? '사용중' : '사용\n가능',
+                        stock > 0 ? '대여\n하기' : '대여\n불가',
                         style: TextStyle(
                           color: Colors.white,
                         ),
+                        textAlign: TextAlign.center,
                       ),
                     ),
                   ),

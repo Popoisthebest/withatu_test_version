@@ -18,6 +18,16 @@ class ToolScreen extends StatelessWidget {
               img: 'assets/pink.jpg',
               toolName: '핑크핑크 슈퍼짱짱 뜰채',
             ),
+            SizedBox(height: 8),
+            ToolCard(
+              img: 'assets/green.jpeg',
+              toolName: '푸릇푸릇 참나무 뜰채',
+            ),
+            SizedBox(height: 8),
+            ToolCard(
+              img: 'assets/big.jpg',
+              toolName: '일타만피 대왕 뜰채',
+            ),
           ],
         ),
       ),
