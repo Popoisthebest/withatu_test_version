@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "813499094162",
+    "project_id": "withatu-test-version",
+    "storage_bucket": "withatu-test-version.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:813499094162:android:86fd0b62cf0c5cc049c24b",
+        "android_client_info": {
+          "package_name": "com.evershare.withatu_test_version"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC_KHvJz5lT3yu-lIsKpZbYghK9kvXkjTg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
