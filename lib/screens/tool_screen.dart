@@ -8,7 +8,6 @@ class ToolScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.red,
         title: const Text('뜰체 대여'),
       ),
       body: SafeArea(
@@ -16,9 +15,8 @@ class ToolScreen extends StatelessWidget {
           padding: const EdgeInsets.all(8),
           children: <Widget>[
             ToolCard(
-              img: '',
-              toolName: '뜰채 1',
-              isUsing: true,
+              img: 'assets/pink.jpg',
+              toolName: '핑크핑크 슈퍼짱짱 뜰채',
             ),
           ],
         ),
